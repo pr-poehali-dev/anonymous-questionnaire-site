@@ -5,9 +5,9 @@ import PairwiseComparison from '@/components/survey/PairwiseComparison';
 import RankingScreen from '@/components/survey/RankingScreen';
 import MatrixScreen from '@/components/survey/MatrixScreen';
 import ResultsScreen from '@/components/survey/ResultsScreen';
-import { SurveyData, LifeValue, ComparisonResult, MatrixScores } from '@/types/survey';
+import { SurveyData, ComparisonResult, MatrixScores } from '@/types/survey';
 
-type SurveyStep = 'welcome' | 'demographic' | 'pairwise' | 'ranking' | 'matrix-value' | 'matrix-access' | 'results';
+type SurveyStep = 'welcome' | 'demographic' | 'pairwise' | 'ranking-value' | 'ranking-access' | 'matrix-value' | 'matrix-access' | 'results';
 
 const Index = () => {
   const [currentStep, setCurrentStep] = useState<SurveyStep>('welcome');
@@ -16,7 +16,8 @@ const Index = () => {
     age: 16,
   });
   const [pairwiseResults, setPairwiseResults] = useState<ComparisonResult[]>([]);
-  const [rankingResults, setRankingResults] = useState<LifeValue[]>([]);
+  const [rankingValueResults, setRankingValueResults] = useState<number[]>([]);
+  const [rankingAccessResults, setRankingAccessResults] = useState<number[]>([]);
   const [matrixValueScores, setMatrixValueScores] = useState<MatrixScores>({});
   const [matrixAccessScores, setMatrixAccessScores] = useState<MatrixScores>({});
 
@@ -31,11 +32,16 @@ const Index = () => {
 
   const handlePairwiseComplete = (results: ComparisonResult[]) => {
     setPairwiseResults(results);
-    setCurrentStep('ranking');
+    setCurrentStep('ranking-value');
   };
 
-  const handleRankingComplete = (results: LifeValue[]) => {
-    setRankingResults(results);
+  const handleRankingValueComplete = (ranking: number[]) => {
+    setRankingValueResults(ranking);
+    setCurrentStep('ranking-access');
+  };
+
+  const handleRankingAccessComplete = (ranking: number[]) => {
+    setRankingAccessResults(ranking);
     setCurrentStep('matrix-value');
   };
 
@@ -52,7 +58,8 @@ const Index = () => {
   const handleRestart = () => {
     setSurveyData({ gender: '', age: 16 });
     setPairwiseResults([]);
-    setRankingResults([]);
+    setRankingValueResults([]);
+    setRankingAccessResults([]);
     setMatrixValueScores({});
     setMatrixAccessScores({});
     setCurrentStep('welcome');
@@ -63,7 +70,8 @@ const Index = () => {
       {currentStep === 'welcome' && <WelcomeScreen onStart={handleStartSurvey} />}
       {currentStep === 'demographic' && <DemographicForm onComplete={handleDemographicComplete} />}
       {currentStep === 'pairwise' && <PairwiseComparison onComplete={handlePairwiseComplete} />}
-      {currentStep === 'ranking' && <RankingScreen onComplete={handleRankingComplete} />}
+      {currentStep === 'ranking-value' && <RankingScreen type="value" onComplete={handleRankingValueComplete} />}
+      {currentStep === 'ranking-access' && <RankingScreen type="access" onComplete={handleRankingAccessComplete} />}
       {currentStep === 'matrix-value' && (
         <MatrixScreen 
           type="value" 
@@ -80,7 +88,8 @@ const Index = () => {
         <ResultsScreen
           surveyData={surveyData}
           pairwiseResults={pairwiseResults}
-          rankingResults={rankingResults}
+          rankingValueResults={rankingValueResults}
+          rankingAccessResults={rankingAccessResults}
           matrixValueScores={matrixValueScores}
           matrixAccessScores={matrixAccessScores}
           onRestart={handleRestart}

@@ -1,91 +1,156 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { LIFE_VALUES, LifeValue } from '@/types/survey';
+import { LIFE_VALUES } from '@/types/survey';
 import Icon from '@/components/ui/icon';
+import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors, DragEndEvent } from '@dnd-kit/core';
+import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 interface RankingScreenProps {
-  onComplete: (ranking: LifeValue[]) => void;
+  type: 'value' | 'access';
+  onComplete: (ranking: number[]) => void;
 }
 
-const RankingScreen = ({ onComplete }: RankingScreenProps) => {
-  const [selectedValues, setSelectedValues] = useState<number[]>([]);
+interface SortableItemProps {
+  id: number;
+  index: number;
+  title: string;
+  description: string;
+  type: 'value' | 'access';
+}
 
-  const handleToggle = (id: number) => {
-    setSelectedValues(prev => {
-      if (prev.includes(id)) {
-        return prev.filter(v => v !== id);
-      } else if (prev.length < 2) {
-        return [...prev, id];
-      }
-      return prev;
-    });
-  };
+const SortableItem = ({ id, index, title, description, type }: SortableItemProps) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: id.toString() });
 
-  const handleSubmit = () => {
-    if (selectedValues.length === 2) {
-      const ranking = LIFE_VALUES.filter(v => selectedValues.includes(v.id));
-      onComplete(ranking);
-    }
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <Card className="max-w-5xl w-full p-8 md:p-12 bg-white/80 backdrop-blur-sm shadow-xl">
+    <div
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      {...listeners}
+      className={`p-4 rounded-xl border-2 transition-all duration-200 cursor-move ${
+        isDragging
+          ? 'bg-white border-blue-500 shadow-2xl scale-105 opacity-50'
+          : type === 'value'
+          ? 'bg-gradient-to-r from-blue-50 to-blue-100 border-blue-200 hover:border-blue-400 hover:shadow-lg'
+          : 'bg-gradient-to-r from-green-50 to-green-100 border-green-200 hover:border-green-400 hover:shadow-lg'
+      }`}
+    >
+      <div className="flex items-center gap-4">
+        <div className="flex items-center justify-center w-12 h-12 rounded-lg bg-white shadow-sm">
+          <span className={`text-xl font-bold ${type === 'value' ? 'text-blue-600' : 'text-green-600'}`}>
+            {index + 1}
+          </span>
+        </div>
+        <div className="flex-1">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-sm font-semibold text-gray-500">#{id}</span>
+            <h3 className="text-base font-bold text-gray-800">{title}</h3>
+          </div>
+          <p className="text-sm text-gray-600">{description}</p>
+        </div>
+        <Icon name="GripVertical" size={24} className="text-gray-400" />
+      </div>
+    </div>
+  );
+};
+
+const RankingScreen = ({ type, onComplete }: RankingScreenProps) => {
+  const [items, setItems] = useState(LIFE_VALUES.map(v => v.id));
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (over && active.id !== over.id) {
+      setItems((items) => {
+        const oldIndex = items.indexOf(Number(active.id));
+        const newIndex = items.indexOf(Number(over.id));
+        return arrayMove(items, oldIndex, newIndex);
+      });
+    }
+  };
+
+  const handleSubmit = () => {
+    onComplete(items);
+  };
+
+  const title = type === 'value'
+    ? 'Ранжирование по важности'
+    : 'Ранжирование по доступности';
+
+  const description = type === 'value'
+    ? 'Расположите ценности в порядке убывания их важности для вас. Самая важная должна быть первой.'
+    : 'Расположите ценности в порядке убывания их доступности для вас. Самая доступная должна быть первой.';
+
+  return (
+    <div className="min-h-screen flex items-center justify-center p-4 py-12">
+      <Card className="max-w-4xl w-full p-8 md:p-12 bg-white/80 backdrop-blur-sm shadow-xl">
         <div className="space-y-6">
           <div className="text-center space-y-3">
-            <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              Выберите самые важные
+            <h2 className={`text-3xl font-bold ${type === 'value' ? 'text-blue-600' : 'text-green-600'}`}>
+              {title}
             </h2>
-            <p className="text-gray-600 text-lg">
-              Выберите из двух ценностей ту, которая для Вас наиболее важна
-            </p>
-            <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
-              <Icon name="Info" size={16} />
-              <span>Выбрано: {selectedValues.length} из 2</span>
+            <p className="text-gray-600 text-lg">{description}</p>
+            <div className="flex items-center justify-center gap-2 text-sm text-gray-500 bg-gray-100 p-3 rounded-lg">
+              <Icon name="Info" size={18} />
+              <span>Перетаскивайте карточки для изменения порядка</span>
             </div>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
-            {LIFE_VALUES.map((value) => {
-              const isSelected = selectedValues.includes(value.id);
-              const canSelect = selectedValues.length < 2 || isSelected;
-
-              return (
-                <button
-                  key={value.id}
-                  onClick={() => canSelect && handleToggle(value.id)}
-                  disabled={!canSelect}
-                  className={`p-6 rounded-xl border-2 transition-all duration-300 text-left ${
-                    isSelected
-                      ? 'bg-gradient-to-br from-blue-100 to-purple-100 border-blue-500 shadow-lg scale-105'
-                      : canSelect
-                      ? 'bg-white border-gray-200 hover:border-blue-300 hover:shadow-md'
-                      : 'bg-gray-50 border-gray-100 opacity-50 cursor-not-allowed'
-                  }`}
-                >
-                  <div className="flex items-start justify-between mb-3">
-                    <div className={`text-2xl font-bold ${isSelected ? 'text-blue-600' : 'text-gray-400'}`}>
-                      {value.id}
-                    </div>
-                    {isSelected && (
-                      <Icon name="CheckCircle2" size={24} className="text-blue-600" />
-                    )}
-                  </div>
-                  <h3 className="text-base font-semibold text-gray-800 mb-2">{value.title}</h3>
-                  <p className="text-sm text-gray-600">{value.description}</p>
-                </button>
-              );
-            })}
-          </div>
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+          >
+            <SortableContext items={items.map(id => id.toString())} strategy={verticalListSortingStrategy}>
+              <div className="space-y-3 mt-8">
+                {items.map((id, index) => {
+                  const value = LIFE_VALUES.find(v => v.id === id)!;
+                  return (
+                    <SortableItem
+                      key={id}
+                      id={id}
+                      index={index}
+                      title={value.title}
+                      description={value.description}
+                      type={type}
+                    />
+                  );
+                })}
+              </div>
+            </SortableContext>
+          </DndContext>
 
           <Button
             size="lg"
             onClick={handleSubmit}
-            disabled={selectedValues.length !== 2}
-            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-6 text-lg disabled:opacity-50 mt-8"
+            className={`w-full text-white py-6 text-lg mt-8 ${
+              type === 'value'
+                ? 'bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800'
+                : 'bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800'
+            }`}
           >
-            Продолжить к оценке
+            Продолжить
             <Icon name="ArrowRight" size={20} className="ml-2" />
           </Button>
         </div>

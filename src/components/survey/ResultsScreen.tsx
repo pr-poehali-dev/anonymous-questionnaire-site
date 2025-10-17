@@ -9,7 +9,8 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 interface ResultsScreenProps {
   surveyData: SurveyData;
   pairwiseResults: ComparisonResult[];
-  rankingResults: LifeValue[];
+  rankingValueResults: number[];
+  rankingAccessResults: number[];
   matrixValueScores: MatrixScores;
   matrixAccessScores: MatrixScores;
   onRestart: () => void;
@@ -17,6 +18,8 @@ interface ResultsScreenProps {
 
 const ResultsScreen = ({
   surveyData,
+  rankingValueResults,
+  rankingAccessResults,
   matrixValueScores,
   matrixAccessScores,
   onRestart,
@@ -165,13 +168,70 @@ const ResultsScreen = ({
           </Card>
         </Card>
 
-        <Tabs defaultValue="charts" className="w-full">
-          <TabsList className="grid w-full grid-cols-4 mb-6">
+        <Tabs defaultValue="rankings" className="w-full">
+          <TabsList className="grid w-full grid-cols-5 mb-6">
+            <TabsTrigger value="rankings">Ранжирование</TabsTrigger>
             <TabsTrigger value="charts">Графики</TabsTrigger>
             <TabsTrigger value="top">Топ ценностей</TabsTrigger>
             <TabsTrigger value="conflicts">Конфликты</TabsTrigger>
             <TabsTrigger value="detailed">Детально</TabsTrigger>
           </TabsList>
+
+          <TabsContent value="rankings" className="space-y-6">
+            <div className="grid md:grid-cols-2 gap-6">
+              <Card className="p-8 bg-white/80 backdrop-blur-sm">
+                <h3 className="text-2xl font-bold mb-6 text-blue-600 flex items-center">
+                  <Icon name="Award" size={28} className="mr-2" />
+                  Ранжирование по важности
+                </h3>
+                <div className="space-y-3">
+                  {rankingValueResults.map((id, index) => {
+                    const value = LIFE_VALUES.find(v => v.id === id)!;
+                    return (
+                      <div key={id} className="flex items-start space-x-4 p-4 rounded-lg bg-gradient-to-r from-blue-50 to-blue-100 border border-blue-200">
+                        <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-blue-600 text-white font-bold shadow-sm">
+                          {index + 1}
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="text-xs font-semibold text-gray-500">#{value.id}</span>
+                            <h4 className="font-semibold text-gray-800">{value.title}</h4>
+                          </div>
+                          <p className="text-sm text-gray-600">{value.description}</p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </Card>
+
+              <Card className="p-8 bg-white/80 backdrop-blur-sm">
+                <h3 className="text-2xl font-bold mb-6 text-green-600 flex items-center">
+                  <Icon name="Target" size={28} className="mr-2" />
+                  Ранжирование по доступности
+                </h3>
+                <div className="space-y-3">
+                  {rankingAccessResults.map((id, index) => {
+                    const value = LIFE_VALUES.find(v => v.id === id)!;
+                    return (
+                      <div key={id} className="flex items-start space-x-4 p-4 rounded-lg bg-gradient-to-r from-green-50 to-green-100 border border-green-200">
+                        <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-green-600 text-white font-bold shadow-sm">
+                          {index + 1}
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="text-xs font-semibold text-gray-500">#{value.id}</span>
+                            <h4 className="font-semibold text-gray-800">{value.title}</h4>
+                          </div>
+                          <p className="text-sm text-gray-600">{value.description}</p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </Card>
+            </div>
+          </TabsContent>
 
           <TabsContent value="charts" className="space-y-6">
             <Card className="p-8 bg-white/80 backdrop-blur-sm">
