@@ -107,7 +107,10 @@ const RankingScreen = ({ type, onComplete }: RankingScreenProps) => {
       <Card className="max-w-4xl w-full p-8 md:p-12 bg-white/80 backdrop-blur-sm shadow-xl">
         <div className="space-y-6">
           <div className="text-center space-y-3">
-            <h2 className={`text-3xl font-bold ${type === 'value' ? 'text-blue-600' : 'text-green-600'}`}>
+            <div className="text-sm font-semibold text-gray-600 mb-2">
+              {type === 'value' ? 'Этап 1' : 'Этап 3'}: {title}
+            </div>
+            <h2 className={`text-3xl font-bold ${type === 'value' ? 'text-blue-600' : 'text-purple-600'}`}>
               {title}
             </h2>
             <p className="text-gray-600 text-lg">{description}</p>

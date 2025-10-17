@@ -26,19 +26,19 @@ const Index = () => {
 
   const handleDemographicComplete = (data: Pick<SurveyData, 'gender' | 'age'>) => {
     setSurveyData({ ...surveyData, ...data });
-    setCurrentStep('matrix-value');
+    setCurrentStep('ranking-value');
   };
 
 
 
   const handleRankingValueComplete = (ranking: number[]) => {
     setRankingValueResults(ranking);
-    setCurrentStep('ranking-access');
+    setCurrentStep('matrix-value');
   };
 
   const handleRankingAccessComplete = (ranking: number[]) => {
     setRankingAccessResults(ranking);
-    setCurrentStep('matrix-access');
+    setCurrentStep('results');
   };
 
   const handleMatrixValueComplete = (scores: MatrixScores) => {
@@ -48,12 +48,12 @@ const Index = () => {
 
   const handleMatrixAccessComplete = (scores: MatrixScores) => {
     setMatrixAccessScores(scores);
-    setCurrentStep('ranking-access');
+    setCurrentStep('matrix-access');
   };
 
-  const handleRankingAccessComplete2 = (ranking: number[]) => {
-    setRankingAccessResults(ranking);
-    setCurrentStep('results');
+  const handleMatrixAccessComplete2 = (scores: MatrixScores) => {
+    setMatrixAccessScores(scores);
+    setCurrentStep('ranking-access');
   };
 
   const handleRestart = () => {
@@ -79,10 +79,10 @@ const Index = () => {
       {currentStep === 'matrix-access' && (
         <MatrixScreen 
           type="access" 
-          onComplete={handleMatrixAccessComplete}
+          onComplete={handleMatrixAccessComplete2}
         />
       )}
-      {currentStep === 'ranking-access' && <RankingScreen type="access" onComplete={handleRankingAccessComplete2} />}
+      {currentStep === 'ranking-access' && <RankingScreen type="access" onComplete={handleRankingAccessComplete} />}
       {currentStep === 'results' && (
         <ResultsScreen
           surveyData={surveyData}
