@@ -17,10 +17,11 @@ interface SortableItemProps {
   index: number;
   title: string;
   description: string;
+  image: string;
   type: 'value' | 'access';
 }
 
-const SortableItem = ({ id, index, title, description, type }: SortableItemProps) => {
+const SortableItem = ({ id, index, title, description, image, type }: SortableItemProps) => {
   const {
     attributes,
     listeners,
@@ -41,28 +42,38 @@ const SortableItem = ({ id, index, title, description, type }: SortableItemProps
       style={style}
       {...attributes}
       {...listeners}
-      className={`p-4 rounded-xl border-2 transition-all duration-200 cursor-move ${
+      className={`relative overflow-hidden rounded-xl border-2 transition-all duration-200 cursor-move ${
         isDragging
           ? 'bg-white border-blue-500 shadow-2xl scale-105 opacity-50'
           : type === 'value'
-          ? 'bg-gradient-to-r from-blue-50 to-blue-100 border-blue-200 hover:border-blue-400 hover:shadow-lg'
-          : 'bg-gradient-to-r from-green-50 to-green-100 border-green-200 hover:border-green-400 hover:shadow-lg'
+          ? 'border-blue-200 hover:border-blue-400 hover:shadow-lg'
+          : 'border-green-200 hover:border-green-400 hover:shadow-lg'
       }`}
     >
-      <div className="flex items-center gap-4">
-        <div className="flex items-center justify-center w-12 h-12 rounded-lg bg-white shadow-sm">
-          <span className={`text-xl font-bold ${type === 'value' ? 'text-blue-600' : 'text-green-600'}`}>
-            {index + 1}
-          </span>
+      <div className="flex items-center gap-4 bg-white">
+        <div className="relative w-24 h-24 flex-shrink-0">
+          <img 
+            src={image} 
+            alt={title}
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent to-white/50" />
+          <div className="absolute top-2 left-2 flex items-center justify-center w-8 h-8 rounded-lg bg-white/90 shadow-sm">
+            <span className={`text-sm font-bold ${type === 'value' ? 'text-blue-600' : 'text-green-600'}`}>
+              {index + 1}
+            </span>
+          </div>
         </div>
-        <div className="flex-1">
+        <div className="flex-1 py-4">
           <div className="flex items-center gap-2 mb-1">
             <span className="text-sm font-semibold text-gray-500">#{id}</span>
             <h3 className="text-base font-bold text-gray-800">{title}</h3>
           </div>
           <p className="text-sm text-gray-600">{description}</p>
         </div>
-        <Icon name="GripVertical" size={24} className="text-gray-400" />
+        <div className="pr-4">
+          <Icon name="GripVertical" size={24} className="text-gray-400" />
+        </div>
       </div>
     </div>
   );
@@ -136,6 +147,7 @@ const RankingScreen = ({ type, onComplete }: RankingScreenProps) => {
                       index={index}
                       title={value.title}
                       description={value.description}
+                      image={value.image}
                       type={type}
                     />
                   );

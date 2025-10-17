@@ -187,16 +187,19 @@ const ResultsScreen = ({
                   {rankingValueResults.map((id, index) => {
                     const value = LIFE_VALUES.find(v => v.id === id)!;
                     return (
-                      <div key={id} className="flex items-start space-x-4 p-4 rounded-lg bg-gradient-to-r from-blue-50 to-blue-100 border border-blue-200">
-                        <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-blue-600 text-white font-bold shadow-sm">
-                          {index + 1}
+                      <div key={id} className="flex items-start space-x-3 p-3 rounded-lg bg-gradient-to-r from-blue-50 to-blue-100 border border-blue-200">
+                        <div className="relative w-14 h-14 rounded-lg overflow-hidden flex-shrink-0">
+                          <img src={value.image} alt={value.title} className="w-full h-full object-cover" />
+                          <div className="absolute inset-0 bg-blue-600/40 flex items-center justify-center">
+                            <span className="text-lg font-bold text-white drop-shadow-lg">{index + 1}</span>
+                          </div>
                         </div>
-                        <div className="flex-1">
+                        <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-1">
                             <span className="text-xs font-semibold text-gray-500">#{value.id}</span>
-                            <h4 className="font-semibold text-gray-800">{value.title}</h4>
+                            <h4 className="font-semibold text-gray-800 text-sm">{value.title}</h4>
                           </div>
-                          <p className="text-sm text-gray-600">{value.description}</p>
+                          <p className="text-xs text-gray-600">{value.description}</p>
                         </div>
                       </div>
                     );
@@ -213,16 +216,19 @@ const ResultsScreen = ({
                   {rankingAccessResults.map((id, index) => {
                     const value = LIFE_VALUES.find(v => v.id === id)!;
                     return (
-                      <div key={id} className="flex items-start space-x-4 p-4 rounded-lg bg-gradient-to-r from-green-50 to-green-100 border border-green-200">
-                        <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-green-600 text-white font-bold shadow-sm">
-                          {index + 1}
+                      <div key={id} className="flex items-start space-x-3 p-3 rounded-lg bg-gradient-to-r from-green-50 to-green-100 border border-green-200">
+                        <div className="relative w-14 h-14 rounded-lg overflow-hidden flex-shrink-0">
+                          <img src={value.image} alt={value.title} className="w-full h-full object-cover" />
+                          <div className="absolute inset-0 bg-green-600/40 flex items-center justify-center">
+                            <span className="text-lg font-bold text-white drop-shadow-lg">{index + 1}</span>
+                          </div>
                         </div>
-                        <div className="flex-1">
+                        <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-1">
                             <span className="text-xs font-semibold text-gray-500">#{value.id}</span>
-                            <h4 className="font-semibold text-gray-800">{value.title}</h4>
+                            <h4 className="font-semibold text-gray-800 text-sm">{value.title}</h4>
                           </div>
-                          <p className="text-sm text-gray-600">{value.description}</p>
+                          <p className="text-xs text-gray-600">{value.description}</p>
                         </div>
                       </div>
                     );
@@ -284,8 +290,13 @@ const ResultsScreen = ({
                 </h3>
                 <div className="space-y-4">
                   {analysis.topValues.map((value, index) => (
-                    <div key={value.id} className="flex items-start space-x-4 p-4 rounded-lg bg-blue-50 border border-blue-200">
-                      <div className="text-2xl font-bold text-blue-600 w-8">{index + 1}</div>
+                    <div key={value.id} className="flex items-start space-x-4 p-4 rounded-lg bg-blue-50 border border-blue-200 overflow-hidden">
+                      <div className="relative w-16 h-16 rounded-lg overflow-hidden flex-shrink-0">
+                        <img src={value.image} alt={value.title} className="w-full h-full object-cover" />
+                        <div className="absolute inset-0 bg-blue-600/20 flex items-center justify-center">
+                          <span className="text-xl font-bold text-white drop-shadow-lg">{index + 1}</span>
+                        </div>
+                      </div>
                       <div className="flex-1">
                         <h4 className="font-semibold text-gray-800">{value.title}</h4>
                         <p className="text-sm text-gray-600">{value.description}</p>
@@ -302,8 +313,13 @@ const ResultsScreen = ({
                 </h3>
                 <div className="space-y-4">
                   {analysis.topAccessible.map((value, index) => (
-                    <div key={value.id} className="flex items-start space-x-4 p-4 rounded-lg bg-green-50 border border-green-200">
-                      <div className="text-2xl font-bold text-green-600 w-8">{index + 1}</div>
+                    <div key={value.id} className="flex items-start space-x-4 p-4 rounded-lg bg-green-50 border border-green-200 overflow-hidden">
+                      <div className="relative w-16 h-16 rounded-lg overflow-hidden flex-shrink-0">
+                        <img src={value.image} alt={value.title} className="w-full h-full object-cover" />
+                        <div className="absolute inset-0 bg-green-600/20 flex items-center justify-center">
+                          <span className="text-xl font-bold text-white drop-shadow-lg">{index + 1}</span>
+                        </div>
+                      </div>
                       <div className="flex-1">
                         <h4 className="font-semibold text-gray-800">{value.title}</h4>
                         <p className="text-sm text-gray-600">{value.description}</p>
@@ -328,14 +344,19 @@ const ResultsScreen = ({
                 {analysis.mostConflicted.map((item, index) => (
                   <div key={item.value.id} className="p-6 rounded-lg bg-gradient-to-r from-red-50 to-orange-50 border-2 border-red-200">
                     <div className="flex items-start justify-between mb-3">
-                      <div className="flex-1">
-                        <div className="flex items-center space-x-3 mb-2">
-                          <span className="text-2xl font-bold text-red-600">{index + 1}</span>
-                          <h4 className="font-bold text-xl text-gray-800">{item.value.title}</h4>
+                      <div className="flex items-start space-x-4 flex-1">
+                        <div className="relative w-20 h-20 rounded-lg overflow-hidden flex-shrink-0">
+                          <img src={item.value.image} alt={item.value.title} className="w-full h-full object-cover" />
+                          <div className="absolute inset-0 bg-red-600/20 flex items-center justify-center">
+                            <span className="text-2xl font-bold text-white drop-shadow-lg">{index + 1}</span>
+                          </div>
                         </div>
-                        <p className="text-gray-600 mb-4">{item.value.description}</p>
+                        <div className="flex-1">
+                          <h4 className="font-bold text-xl text-gray-800 mb-2">{item.value.title}</h4>
+                          <p className="text-gray-600 mb-4">{item.value.description}</p>
+                        </div>
                       </div>
-                      <div className="text-right ml-4">
+                      <div className="text-right ml-4 flex-shrink-0">
                         <div className="text-3xl font-bold text-red-600">{item.diff}</div>
                         <div className="text-sm text-gray-500">разница</div>
                       </div>
@@ -377,8 +398,15 @@ const ResultsScreen = ({
                       <tr key={item.value.id} className="border-b border-gray-200 hover:bg-gray-50">
                         <td className="p-3 font-semibold text-gray-600">{item.value.id}</td>
                         <td className="p-3">
-                          <div className="font-semibold text-gray-800">{item.value.title}</div>
-                          <div className="text-sm text-gray-600">{item.value.description}</div>
+                          <div className="flex items-center space-x-3">
+                            <div className="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0">
+                              <img src={item.value.image} alt={item.value.title} className="w-full h-full object-cover" />
+                            </div>
+                            <div className="flex-1">
+                              <div className="font-semibold text-gray-800">{item.value.title}</div>
+                              <div className="text-sm text-gray-600">{item.value.description}</div>
+                            </div>
+                          </div>
                         </td>
                         <td className="p-3 text-center">
                           <div className="inline-block px-3 py-1 bg-blue-100 text-blue-700 rounded-full font-semibold">

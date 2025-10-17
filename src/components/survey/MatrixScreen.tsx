@@ -75,41 +75,69 @@ const MatrixScreen = ({ type, onComplete }: MatrixScreenProps) => {
           <div className="grid md:grid-cols-2 gap-6 mt-8">
             <button
               onClick={() => handleChoice(value1.id)}
-              className={`group relative p-8 rounded-2xl border-2 transition-all duration-300 transform hover:scale-105 hover:shadow-xl ${
+              className={`group relative overflow-hidden rounded-2xl border-2 transition-all duration-300 transform hover:scale-105 hover:shadow-xl ${
                 type === 'value'
-                  ? 'bg-gradient-to-br from-blue-50 to-blue-100 hover:from-blue-100 hover:to-blue-200 border-blue-200 hover:border-blue-400'
-                  : 'bg-gradient-to-br from-green-50 to-green-100 hover:from-green-100 hover:to-green-200 border-green-200 hover:border-green-400'
+                  ? 'border-blue-200 hover:border-blue-400'
+                  : 'border-green-200 hover:border-green-400'
               }`}
             >
-              <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                <Icon name="CheckCircle2" size={24} className={type === 'value' ? 'text-blue-600' : 'text-green-600'} />
-              </div>
-              <div className="space-y-3">
-                <div className={`text-3xl font-bold ${type === 'value' ? 'text-blue-600' : 'text-green-600'}`}>
-                  {value1.id}
+              <div className="relative h-64 overflow-hidden">
+                <img 
+                  src={value1.image} 
+                  alt={value1.title}
+                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                />
+                <div className={`absolute inset-0 bg-gradient-to-t ${
+                  type === 'value' 
+                    ? 'from-blue-900/90 via-blue-900/50 to-transparent' 
+                    : 'from-green-900/90 via-green-900/50 to-transparent'
+                }`} />
+                <div className="absolute top-4 left-4">
+                  <div className={`text-3xl font-bold ${type === 'value' ? 'text-blue-100' : 'text-green-100'}`}>
+                    {value1.id}
+                  </div>
                 </div>
-                <h3 className="text-xl font-semibold text-gray-800">{value1.title}</h3>
-                <p className="text-gray-600">{value1.description}</p>
+                <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <Icon name="CheckCircle2" size={32} className="text-white drop-shadow-lg" />
+                </div>
+              </div>
+              <div className={`p-6 ${type === 'value' ? 'bg-gradient-to-br from-blue-50 to-blue-100' : 'bg-gradient-to-br from-green-50 to-green-100'}`}>
+                <h3 className="text-xl font-semibold text-gray-800 mb-2">{value1.title}</h3>
+                <p className="text-gray-600 text-sm">{value1.description}</p>
               </div>
             </button>
 
             <button
               onClick={() => handleChoice(value2.id)}
-              className={`group relative p-8 rounded-2xl border-2 transition-all duration-300 transform hover:scale-105 hover:shadow-xl ${
+              className={`group relative overflow-hidden rounded-2xl border-2 transition-all duration-300 transform hover:scale-105 hover:shadow-xl ${
                 type === 'value'
-                  ? 'bg-gradient-to-br from-purple-50 to-purple-100 hover:from-purple-100 hover:to-purple-200 border-purple-200 hover:border-purple-400'
-                  : 'bg-gradient-to-br from-teal-50 to-teal-100 hover:from-teal-100 hover:to-teal-200 border-teal-200 hover:border-teal-400'
+                  ? 'border-purple-200 hover:border-purple-400'
+                  : 'border-teal-200 hover:border-teal-400'
               }`}
             >
-              <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                <Icon name="CheckCircle2" size={24} className={type === 'value' ? 'text-purple-600' : 'text-teal-600'} />
-              </div>
-              <div className="space-y-3">
-                <div className={`text-3xl font-bold ${type === 'value' ? 'text-purple-600' : 'text-teal-600'}`}>
-                  {value2.id}
+              <div className="relative h-64 overflow-hidden">
+                <img 
+                  src={value2.image} 
+                  alt={value2.title}
+                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                />
+                <div className={`absolute inset-0 bg-gradient-to-t ${
+                  type === 'value' 
+                    ? 'from-purple-900/90 via-purple-900/50 to-transparent' 
+                    : 'from-teal-900/90 via-teal-900/50 to-transparent'
+                }`} />
+                <div className="absolute top-4 left-4">
+                  <div className={`text-3xl font-bold ${type === 'value' ? 'text-purple-100' : 'text-teal-100'}`}>
+                    {value2.id}
+                  </div>
                 </div>
-                <h3 className="text-xl font-semibold text-gray-800">{value2.title}</h3>
-                <p className="text-gray-600">{value2.description}</p>
+                <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <Icon name="CheckCircle2" size={32} className="text-white drop-shadow-lg" />
+                </div>
+              </div>
+              <div className={`p-6 ${type === 'value' ? 'bg-gradient-to-br from-purple-50 to-purple-100' : 'bg-gradient-to-br from-teal-50 to-teal-100'}`}>
+                <h3 className="text-xl font-semibold text-gray-800 mb-2">{value2.title}</h3>
+                <p className="text-gray-600 text-sm">{value2.description}</p>
               </div>
             </button>
           </div>
