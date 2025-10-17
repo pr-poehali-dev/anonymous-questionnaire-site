@@ -2,13 +2,12 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { SurveyData, LifeValue, ComparisonResult, MatrixScores, LIFE_VALUES } from '@/types/survey';
+import { SurveyData, LifeValue, MatrixScores, LIFE_VALUES } from '@/types/survey';
 import Icon from '@/components/ui/icon';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar } from 'recharts';
 
 interface ResultsScreenProps {
   surveyData: SurveyData;
-  pairwiseResults: ComparisonResult[];
   rankingValueResults: number[];
   rankingAccessResults: number[];
   matrixValueScores: MatrixScores;

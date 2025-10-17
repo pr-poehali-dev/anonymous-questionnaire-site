@@ -59,7 +59,7 @@ const MatrixScreen = ({ type, onComplete }: MatrixScreenProps) => {
         <div className="space-y-6">
           <div className="space-y-2">
             <div className="flex items-center justify-between text-sm text-gray-600">
-              <span className="font-semibold">{type === 'value' ? 'Этап 2' : 'Этап 3'}: {type === 'value' ? 'Ценность' : 'Доступность'}</span>
+              <span className="font-semibold">{type === 'value' ? 'Этап 1' : 'Этап 3'}: {type === 'value' ? 'Попарное сравнение по привлекательности' : 'Попарное сравнение по достижимости'}</span>
               <span>{currentIndex + 1} из {MATRIX_PAIRS.length}</span>
             </div>
             <Progress value={progress} className="h-2" />
