@@ -38,22 +38,17 @@ const Index = () => {
 
   const handleRankingAccessComplete = (ranking: number[]) => {
     setRankingAccessResults(ranking);
-    setCurrentStep('results');
+    setCurrentStep('matrix-access');
   };
 
   const handleMatrixValueComplete = (scores: MatrixScores) => {
     setMatrixValueScores(scores);
-    setCurrentStep('ranking-value');
+    setCurrentStep('ranking-access');
   };
 
   const handleMatrixAccessComplete = (scores: MatrixScores) => {
     setMatrixAccessScores(scores);
-    setCurrentStep('matrix-access');
-  };
-
-  const handleMatrixAccessComplete2 = (scores: MatrixScores) => {
-    setMatrixAccessScores(scores);
-    setCurrentStep('ranking-access');
+    setCurrentStep('results');
   };
 
   const handleRestart = () => {
@@ -79,7 +74,7 @@ const Index = () => {
       {currentStep === 'matrix-access' && (
         <MatrixScreen 
           type="access" 
-          onComplete={handleMatrixAccessComplete2}
+          onComplete={handleMatrixAccessComplete}
         />
       )}
       {currentStep === 'ranking-access' && <RankingScreen type="access" onComplete={handleRankingAccessComplete} />}
